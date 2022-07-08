@@ -9,31 +9,21 @@ defaults: &defaults
   docker:
     - image: circleci/node:13.8.0
   
-commands:
-  checkout_command:
-    steps:
-      - run: checkout
 
 jobs:
     build:
       <<: *defaults
 
       steps:
-        - checkout_command
+        - checkout
         - run: npm i
-        - save_cache:
-          - key: "npm-package"
-          - paths:
-            - /src/node/modules
         - run: npm run lint
 
     test:
       <<: *defaults
 
       steps:
-        - checkout_command
-        - restore_cache:
-            keys: "npm-package"
+        - checkout
         - run: npm i
         - run: npm run test
 
@@ -41,9 +31,7 @@ jobs:
       <<: *defaults
 
       steps:
-        - checkout_command
-        - restore_cache:
-            keys: "npm-package"
+        - checkout
         - run: npm audit
         - run: 
             name: on error
